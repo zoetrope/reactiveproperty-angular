@@ -1,4 +1,3 @@
-
     var ReactiveProperty = rxprop.ReactiveProperty = (function (_super) {
         Rx.Internals.inherits(ReactiveProperty, _super);
 
@@ -19,33 +18,22 @@
             }
 
             var merge = source.merge(this.another_trigger);
-            /*
-            var connectable = merge.publish();
-            this.observable = connectable.asObservable();
-
-            connectable.subscribe(
-            */
             this.observable = merge.distinctUntilChanged();
             merge.subscribe(
                 function (val) {
                     self.value = val;
-
                     if (!self.scope.$$phase) {
                         self.scope.$apply();
                     }
                 }
             );
-            //connectable.connect();
 
             scope.$watch(
-                function() {
+                function () {
                     return self.value;
                 },
-                function(newVal, oldVal){
-                    console.log("new = " + newVal + ", old = " + oldVal)
-                    //if (!angular.equals(newVal, oldVal)) {
-                        self.another_trigger.onNext(newVal);
-                    //}
+                function (newVal, oldVal) {
+                    self.another_trigger.onNext(newVal);
                 });
 
         }
@@ -64,4 +52,3 @@
 
         return ReactiveProperty;
     }(Rx.Observable));
-
