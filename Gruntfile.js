@@ -32,31 +32,20 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            views: {
-                files: ['app/**/*.html'],
-                tasks: ['copy:views']
-            },
-            ts: {
-                files: ['app/**/*.ts'],
-                tasks: ['ts-compile']
-            },
-            js: {
+            rxprop: {
                 files: ['src/**/*.js'],
                 tasks: ['compile']
             }
         }
     });
 
-    grunt.registerTask('setup',['clean', 'bower', 'exec:tsd']);
+    grunt.registerTask('setup', ['bower']);
 
-    grunt.registerTask('ts-compile',['copy:ts', 'typescript']);
-    grunt.registerTask('compile',['concat:rxprop']);
+    grunt.registerTask('compile', ['concat:rxprop']);
 
-    grunt.registerTask('build',['clean:dist', 'bower', 'copy:views', 'ts-compile', 'js-compile']);
+    grunt.registerTask('default', ['setup', 'compile']);
 
-    grunt.registerTask('serve',['build','connect:dist:keepalive']);
-
-    grunt.registerTask('run',['build','connect:dist','watch']);
+    grunt.registerTask('run', ['compile', 'watch:rxprop']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
