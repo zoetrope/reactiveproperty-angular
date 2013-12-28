@@ -1,0 +1,11 @@
+{
+    "name": "reactiveproperty-angular",
+    "description": "ReactiveProperty for AngularJS",
+    "version": "0.1.0",
+    "main": "rxprop.ng.js",
+    "dependencies": {
+        "angular": "~1.2.5",
+        "angular-resource": "~1.2.5",
+        "rxjs": "~2.2.9"
+    }
+}

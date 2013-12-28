@@ -1,0 +1,13 @@
+{
+    "name": "reactiveproperty-angular",
+    "description": "ReactiveProperty for AngularJS",
+    "version": "0.1.0",
+    "main": "rxprop.ng.js",
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "grunt-contrib-watch": "~0.5.3",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-bower-task": "~0.3.4",
+        "matchdep": "~0.3.0"
+    }
+}
