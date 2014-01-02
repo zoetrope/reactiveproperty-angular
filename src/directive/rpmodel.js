@@ -1,13 +1,13 @@
 angular.module('rxprop')
-    .directive('rxModel', ['$compile', function ($compile) {
+    .directive('rpModel', ['$compile', function ($compile) {
         return {
             restrict: 'A',
             priority: 200,
             terminal: true,
             scope: false,
             link: function postLink(scope, element, attrs) {
-                element.attr("ng-model", attrs.rxModel + ".value");
-                element.removeAttr("rx-model");
+                element.attr("ng-model", attrs.rpModel + ".value");
+                element.removeAttr("rp-model");
 
                 var linkfn = $compile(element)
                 linkfn(scope)

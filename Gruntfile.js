@@ -25,8 +25,8 @@ module.exports = function (grunt) {
                     'src/extension/torxprop.js',
 
                     'src/directive/intro.js',
-                    'src/directive/rxcommand.js',
-                    'src/directive/rxmodel.js'
+                    'src/directive/rpcommand.js',
+                    'src/directive/rpmodel.js'
                 ],
                 dest: 'rxprop.ng.js'
             }
