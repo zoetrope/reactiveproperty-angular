@@ -17,8 +17,8 @@ app.controller("CommandCtrl", ["$scope",
             .toReactiveCommand($scope);
 
         $scope.checkedCommand
-            .subscribe(function (_) {
-                alert("Execute!")
+            .subscribe(function (param) {
+                alert("Execute! input = " + param)
             })
 
     }]);

@@ -21,7 +21,7 @@
         <input type="checkbox" rx-model="isChecked4">
         <input type="text" rx-model="currentText">
 
-        <button rx-command="checkedCommand">push</button>
+        <button rx-command="checkedCommand" rx-parameter="currentText.value">push</button>
     </div>
 </body>
 
