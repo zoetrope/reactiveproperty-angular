@@ -26,7 +26,8 @@ module.exports = function (grunt) {
 
                     'src/directive/intro.js',
                     'src/directive/rpcommand.js',
-                    'src/directive/rpmodel.js'
+                    'src/directive/rpmodel.js',
+                    'src/directive/rpevent.js'
                 ],
                 dest: 'rxprop.ng.js'
             }

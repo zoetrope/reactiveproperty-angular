@@ -166,7 +166,7 @@
 angular.module('rxprop', [])
 
 angular.module('rxprop')
-    .directive('rxCommand', ['$compile', function ($compile) {
+    .directive('rpCommand', ['$compile', function ($compile) {
         return {
             restrict: 'A',
             priority: 200,
@@ -174,10 +174,10 @@ angular.module('rxprop')
             scope: false,
             link: function postLink(scope, element, attrs) {
 
-                element.attr("ng-click", attrs.rxCommand + ".execute(" + (attrs.rxParameter || "") + ")");
+                element.attr("ng-click", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
                 element.attr("ng-disabled", "!" + attrs.rxCommand + ".canExecute()");
-                element.removeAttr("rx-command");
-                element.removeAttr("rx-parameter");
+                element.removeAttr("rp-command");
+                element.removeAttr("rp-parameter");
 
                 var linkfn = $compile(element)
                 linkfn(scope)
@@ -187,18 +187,42 @@ angular.module('rxprop')
     }]);
 
 angular.module('rxprop')
-    .directive('rxModel', ['$compile', function ($compile) {
+    .directive('rpModel', ['$compile', function ($compile) {
         return {
             restrict: 'A',
             priority: 200,
             terminal: true,
             scope: false,
             link: function postLink(scope, element, attrs) {
-                element.attr("ng-model", attrs.rxModel + ".value");
-                element.removeAttr("rx-model");
+                element.attr("ng-model", attrs.rpModel + ".value");
+                element.removeAttr("rp-model");
 
                 var linkfn = $compile(element)
                 linkfn(scope)
             }
         };
     }]);
+
+
+var rpEventDirectives = {};
+angular.forEach(
+    'click dblclick mousedown mouseup mouseover mouseout mousemove mouseenter mouseleave keydown keyup keypress submit focus blur copy cut paste'.split(' '),
+    function(name) {
+        var directiveName = 'rp' + name.charAt(0).toUpperCase() + name.slice(1);
+        rpEventDirectives[directiveName] = ['$parse', function($parse) {
+            return {
+                compile: function($element, attr) {
+                    var bindValue = $parse(attr[directiveName] + ".value");
+                    return function(scope, element, attr) {
+                        element.on(name, function(event) {
+                            scope.$apply(function() {
+                                bindValue.assign(scope, {$event:event})
+                            });
+                        });
+                    };
+                }
+            };
+        }];
+    }
+);
+angular.module('rxprop').directive(rpEventDirectives);
