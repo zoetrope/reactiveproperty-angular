@@ -8,7 +8,7 @@ angular.module('rxprop')
             link: function postLink(scope, element, attrs) {
 
                 element.attr("ng-click", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
-                element.attr("ng-disabled", "!" + attrs.rxCommand + ".canExecute()");
+                element.attr("ng-disabled", "!" + attrs.rpCommand + ".canExecute()");
                 element.removeAttr("rp-command");
                 element.removeAttr("rp-parameter");
 

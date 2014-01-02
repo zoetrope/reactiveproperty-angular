@@ -7,6 +7,7 @@
 
     <script type="text/javascript" src="../lib/angular/angular.js" charset="utf-8"></script>
     <script type="text/javascript" src="../lib/rxjs/rx.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.binding.js" charset="utf-8"></script>
     <script type="text/javascript" src="../lib/rxjs/rx.time.js" charset="utf-8"></script>
 
     <script type="text/javascript" src="../../rxprop.ng.js" charset="utf-8"></script>
@@ -14,7 +15,7 @@
 </head>
 
 <body>
-    <div ng-controller="BasicsCtrl">
+    <div ng-controller="PojoCtrl">
         name: <input type="text" ng-model="inputValue.value.name">
         <br/>
         age: <input type="number" ng-model="inputValue.value.age">

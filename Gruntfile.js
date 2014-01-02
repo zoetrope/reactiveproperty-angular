@@ -20,9 +20,13 @@ module.exports = function (grunt) {
                     'src/core/reactiveproperty.js',
                     'src/core/reactivecollection.js',
                     'src/core/reactivecommand.js',
+                    'src/core/countnotifier.js',
                     'src/core/outro.js',
 
+                    'src/extension/intro.js',
+                    'src/extension/retryextension.js',
                     'src/extension/torxprop.js',
+                    'src/extension/outro.js',
 
                     'src/directive/intro.js',
                     'src/directive/rpcommand.js',

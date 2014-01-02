@@ -17,7 +17,7 @@
             if (source) {
                 source.distinctUntilChanged()
                     .subscribe(function(b){
-                        self.isCanExecute = b;
+                        self.isCanExecute = b ? true : false;
                         if (!self.scope.$$phase) {
                             self.scope.$apply();
                         }

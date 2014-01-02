@@ -21,9 +21,11 @@
                 this.value = initValue;
             }
 
-            var merge = source.merge(this.another_trigger);
-            this.observable = merge.distinctUntilChanged();
-            merge.subscribe(
+            var merge = source.merge(this.another_trigger).distinctUntilChanged();
+            var connectable = merge.publish();
+
+            this.observable = connectable.asObservable();
+            connectable.subscribe(
                 function (val) {
                     self.value = val;
                     if (!self.scope.$$phase) {
@@ -40,6 +42,7 @@
                     self.another_trigger.onNext(newVal);
                 });
 
+            connectable.connect();
         }
 
         Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {

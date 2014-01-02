@@ -2,7 +2,7 @@
 
 var app = angular.module('app', ['rxprop']);
 
-app.controller("CommandCtrl", ["$scope",
+app.controller("EventCtrl", ["$scope",
     function ($scope) {
         $scope.mousemove = new rxprop.ReactiveProperty($scope);
 

@@ -24,9 +24,11 @@
                 this.value = initValue;
             }
 
-            var merge = source.merge(this.another_trigger);
-            this.observable = merge.distinctUntilChanged();
-            merge.subscribe(
+            var merge = source.merge(this.another_trigger).distinctUntilChanged();
+            var connectable = merge.publish();
+
+            this.observable = connectable.asObservable();
+            connectable.subscribe(
                 function (val) {
                     self.value = val;
                     if (!self.scope.$$phase) {
@@ -43,6 +45,7 @@
                     self.another_trigger.onNext(newVal);
                 });
 
+            connectable.connect();
         }
 
         Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
@@ -108,7 +111,7 @@
             if (source) {
                 source.distinctUntilChanged()
                     .subscribe(function(b){
-                        self.isCanExecute = b;
+                        self.isCanExecute = b ? true : false;
                         if (!self.scope.$$phase) {
                             self.scope.$apply();
                         }
@@ -133,6 +136,76 @@
         return ReactiveCommand;
     }(Rx.Observable));
 
+    rxprop.CountChangedStatus = {
+        Increment: 0,
+        Decrement: 1,
+        Empty: 2,
+        Max: 3
+    };
+
+    var CountNotifier = rxprop.CountNotifier = (function (_super) {
+        Rx.Internals.inherits(CountNotifier, _super);
+
+        function subscribe(observer) {
+            return this.statusChanged.subscribe(observer);
+        }
+
+        function CountNotifier(max) {
+            _super.call(this, subscribe);
+
+            if (!max) {
+                max = 2147483647;
+            }
+            this.count = 0;
+            this.max = max;
+            this.statusChanged = new Rx.Subject();
+
+        }
+
+        Rx.Internals.addProperties(CountNotifier.prototype, {
+
+            increment: function () {
+
+                if (this.count === this.max) {
+                    return;
+                } else if (this.count + 1 > this.max) {
+                    this.count = max;
+                } else {
+                    this.count = this.count + 1;
+                }
+
+                this.statusChanged.onNext(rxprop.CountChangedStatus.Increment);
+
+                if(this.count === this.max) {
+                    this.statusChanged.onNext(rxprop.CountChangedStatus.Max);
+                }
+
+                return this.isCanExecute;
+            },
+
+            decrement: function () {
+
+                if (this.count === 0) {
+                    return;
+                } else if (this.count - 1 < 0) {
+                    this.count = 0;
+                } else {
+                    this.count = this.count - 1;
+                }
+
+                this.statusChanged.onNext(rxprop.CountChangedStatus.Decrement);
+
+                if(this.count === 0) {
+                    this.statusChanged.onNext(rxprop.CountChangedStatus.Empty);
+                }
+
+                return this.isCanExecute;
+            }
+        });
+
+        return CountNotifier;
+    }(Rx.Observable));
+
 
     root.rxprop = rxprop;
 
@@ -146,6 +219,37 @@
     }
 
     var Rx = root.Rx;
+
+    Rx.Observable.prototype.onErrorRetry = function (onError, retryCount, delay) {
+        var source = this;
+
+        var result = Rx.Observable.defer(function () {
+            if (!retryCount) retryCount = 0;
+            if (!delay) delay = 0;
+            var empty = Rx.Observable.empty();
+            var count = 0;
+
+            var self = null;
+            self = source.catch(function (e) {
+                onError(e);
+
+                count++;
+                if (count < retryCount) {
+                    if (delay === 0) {
+                        return self.subscribeOn(Rx.Scheduler.currentThread);
+                    } else {
+                        return empty.delay(delay).concat(self);
+                    }
+                } else {
+                    return Rx.Observable.throw(e);
+                }
+            });
+            return self;
+        });
+
+        return result;
+    };
+
 
     Rx.Observable.prototype.toReactiveProperty = function ($scope) {
         var source = this;
@@ -161,8 +265,9 @@
         var source = this;
         return new rxprop.ReactiveCommand($scope, source);
     };
-})(this);
 
+
+})(this);
 angular.module('rxprop', [])
 
 angular.module('rxprop')
@@ -175,7 +280,7 @@ angular.module('rxprop')
             link: function postLink(scope, element, attrs) {
 
                 element.attr("ng-click", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
-                element.attr("ng-disabled", "!" + attrs.rxCommand + ".canExecute()");
+                element.attr("ng-disabled", "!" + attrs.rpCommand + ".canExecute()");
                 element.removeAttr("rp-command");
                 element.removeAttr("rp-parameter");
 
