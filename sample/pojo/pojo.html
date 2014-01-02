@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <script type="text/javascript" src="../lib/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.time.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="../../rxprop.ng.js" charset="utf-8"></script>
+    <script type="text/javascript" src="pojo.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div ng-controller="BasicsCtrl">
+        name: <input type="text" ng-model="inputValue.value.name">
+        <br/>
+        age: <input type="number" ng-model="inputValue.value.age">
+        <br/>
+        {{displayValue.value}}
+        <br/>
+    </div>
+</body>
+
+</html>

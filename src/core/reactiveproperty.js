@@ -5,7 +5,7 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveProperty(scope, source) {
+        function ReactiveProperty(scope, initValue, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
@@ -15,6 +15,10 @@
 
             if (!source) {
                 source = Rx.Observable.never();
+            }
+
+            if (initValue) {
+                this.value = initValue;
             }
 
             var merge = source.merge(this.another_trigger);
