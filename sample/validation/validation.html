@@ -1,0 +1,33 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <script type="text/javascript" src="../lib/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.binding.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.time.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="../../rxprop.ng.js" charset="utf-8"></script>
+    <script type="text/javascript" src="validation.js" charset="utf-8"></script>
+</head>
+
+<body>
+<div ng-controller="ValidationCtrl">
+    <form name="myform" nonvalidate>
+        <input type="text" name="inputText" ng-model="inputText.value" ng-minlength="4" ng-maxlength="10" required>
+        <span class="error" ng-show="myform.inputText.$error.required">Required</span>
+        <span class="error" ng-show="myform.inputText.$error.minlength">Length too short</span>
+        <span class="error" ng-show="myform.inputText.$error.maxlength">Length too long</span>
+        <span class="valid" ng-show="myform.inputText.$valid">OK</span>
+    </form>
+    <br/>
+    {{displayText.value}}
+    <br/>
+    <button rp-command="replaceTextCommand">Is TextBox invalid?</button>
+</div>
+</body>
+
+</html>
