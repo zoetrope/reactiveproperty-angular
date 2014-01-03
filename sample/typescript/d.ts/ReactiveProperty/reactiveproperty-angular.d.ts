@@ -2,7 +2,7 @@
 /// <reference path="../DefinitelyTyped/rx.js/rx.d.ts" />
 
 declare module rxprop {
-    export interface ReactiveProperty<T> extends Rx.Observable<T>, Rx.Observer<T> {
+    export interface ReactiveProperty<T> extends Rx.Observable<T>, Rx.Observer<T>, Rx.IDisposable {
         value: T;
     }
     interface ReactivePropertyStatic {
@@ -10,7 +10,7 @@ declare module rxprop {
     }
     export var ReactiveProperty:ReactivePropertyStatic;
 
-    export interface ReactiveCollection<T> extends Rx.Observable<T> {
+    export interface ReactiveCollection<T> extends Rx.Observable<T>, Rx.IDisposable {
         values: Array<T>;
     }
     interface ReactiveCollectionStatic {
@@ -18,7 +18,7 @@ declare module rxprop {
     }
     export var ReactiveCollection:ReactiveCollectionStatic;
 
-    export interface ReactiveCommand<T> extends Rx.Observable<T> {
+    export interface ReactiveCommand<T> extends Rx.Observable<T>, Rx.IDisposable {
         execute(param:T);
         canExecute(param) : boolean;
     }

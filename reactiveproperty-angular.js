@@ -16,7 +16,8 @@
             _super.call(this, subscribe);
 
             this.scope = scope;
-            this.another_trigger = new Rx.Subject();
+            this.anotherTrigger = new Rx.Subject();
+            this.isDisposed = false;
 
             var self = this;
 
@@ -28,11 +29,11 @@
                 this.value = initValue;
             }
 
-            var merge = source.merge(this.another_trigger).distinctUntilChanged();
+            var merge = source.merge(this.anotherTrigger).distinctUntilChanged();
             var connectable = merge.publish();
 
             this.observable = connectable.asObservable();
-            connectable.subscribe(
+            this.raiseSubscription = connectable.subscribe(
                 function (val) {
                     self.value = val;
                     if (!self.scope.$$phase) {
@@ -46,21 +47,31 @@
                     return self.value;
                 },
                 function (newVal, oldVal) {
-                    self.another_trigger.onNext(newVal);
+                    self.anotherTrigger.onNext(newVal);
                 });
 
-            connectable.connect();
+            this.sourceDisposable = connectable.connect();
         }
 
         Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
             onCompleted: function () {
-                this.another_trigger.onCompleted()
+                this.anotherTrigger.onCompleted()
             },
+
             onError: function (exception) {
-                this.another_trigger.onError(exception)
+                this.anotherTrigger.onError(exception)
             },
+
             onNext: function (value) {
-                this.another_trigger.onNext(value)
+                this.anotherTrigger.onNext(value)
+            },
+
+            dispose: function () {
+                if (this.isDisposed) return;
+                this.isDisposed = true;
+                this.anotherTrigger.dispose();
+                this.raiseSubscription.dispose();
+                this.sourceDisposable.dispose();
             }
         });
 
@@ -73,10 +84,11 @@
             this.scope = scope;
 
             this.values = []
+            this.isDisposed = false;
             var self = this;
 
             if (source) {
-                source.subscribe(
+                this.sourceDisposable = source.subscribe(
                     function (val) {
                         self.values.push(val)
                         if (!self.scope.$$phase) {
@@ -90,6 +102,14 @@
         Rx.Internals.addProperties(ReactiveCollection.prototype, {
             clear: function () {
                 this.values = [];
+            },
+
+            dispose: function () {
+                if (this.isDisposed) return;
+                this.isDisposed = true;
+                if (this.sourceDisposable) {
+                    this.sourceDisposable.dispose();
+                }
             }
         });
 
@@ -110,10 +130,11 @@
             this.subject = new Rx.Subject();
             this.isCanExecute = true;
             this.scope = scope;
+            this.isDisposed = false;
             var self = this;
 
             if (source) {
-                source.distinctUntilChanged()
+                this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
                         self.isCanExecute = b ? true : false;
                         if (!self.scope.$$phase) {
@@ -134,6 +155,19 @@
 
             canExecute: function () {
                 return this.isCanExecute;
+            },
+
+            dispose: function () {
+                if (this.isDisposed) return;
+                this.isDisposed = true;
+                if(this.canExecuteSubscription){
+                    this.canExecuteSubscription.dispose();
+                }
+
+                this.subject.onCompleted();
+                this.subject.dispose();
+
+                this.isCanExecute = false;
             }
         });
 

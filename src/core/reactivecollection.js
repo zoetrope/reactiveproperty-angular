@@ -4,10 +4,11 @@
             this.scope = scope;
 
             this.values = []
+            this.isDisposed = false;
             var self = this;
 
             if (source) {
-                source.subscribe(
+                this.sourceDisposable = source.subscribe(
                     function (val) {
                         self.values.push(val)
                         if (!self.scope.$$phase) {
@@ -21,6 +22,14 @@
         Rx.Internals.addProperties(ReactiveCollection.prototype, {
             clear: function () {
                 this.values = [];
+            },
+
+            dispose: function () {
+                if (this.isDisposed) return;
+                this.isDisposed = true;
+                if (this.sourceDisposable) {
+                    this.sourceDisposable.dispose();
+                }
             }
         });
 

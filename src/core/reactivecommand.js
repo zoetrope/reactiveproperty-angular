@@ -12,10 +12,11 @@
             this.subject = new Rx.Subject();
             this.isCanExecute = true;
             this.scope = scope;
+            this.isDisposed = false;
             var self = this;
 
             if (source) {
-                source.distinctUntilChanged()
+                this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
                         self.isCanExecute = b ? true : false;
                         if (!self.scope.$$phase) {
@@ -36,6 +37,19 @@
 
             canExecute: function () {
                 return this.isCanExecute;
+            },
+
+            dispose: function () {
+                if (this.isDisposed) return;
+                this.isDisposed = true;
+                if(this.canExecuteSubscription){
+                    this.canExecuteSubscription.dispose();
+                }
+
+                this.subject.onCompleted();
+                this.subject.dispose();
+
+                this.isCanExecute = false;
             }
         });
 
