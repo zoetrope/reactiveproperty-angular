@@ -15,12 +15,12 @@ app.controller("ValidationCtrl", ["$scope",
             })
             .toReactiveProperty($scope);
 
-        $scope.replaceTextCommand = $scope.inputText.select(function (s) {
+        $scope.displayCommand = $scope.inputText.select(function (_) {
             return $scope.myform.inputText.$valid;
         }).toReactiveCommand($scope);
 
-        $scope.replaceTextCommand.subscribe(function (_) {
-            $scope.inputText.value = "Hello, ReactiveProperty for AngularJS!";
+        $scope.displayCommand.subscribe(function (v) {
+            alert("input text = " + v);
         });
 
     }]);

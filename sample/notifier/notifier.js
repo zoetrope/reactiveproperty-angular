@@ -4,8 +4,8 @@ var app = angular.module('app', ['rxprop', 'ngMockE2E']);
 
 app.run(["$httpBackend", "$timeout", function ($httpBackend, $timeout) {
     var items = [
-        {name: 'hoge'},
-        {name: 'fuga'}
+        {name: 'hoge', date: new Date()},
+        {name: 'fuga', date: new Date()}
     ];
     $httpBackend
         .whenGET('/items')
@@ -48,15 +48,21 @@ app.controller("NotifierCtrl", ["$scope", "DummySearch",
 
         $scope.displayText = $scope.downloadCommand
             .selectMany(function (_) {
-                return Rx.Observable.defer(function () {
-                    network.increment();
-                    return DummySearch().finally(function () {
-                        network.decrement();
-                    });})
+                network.increment();
+                return Rx.Observable
+                    .defer(function () {
+                        network.increment();
+                        return DummySearch().finally(function () {
+                            network.decrement();
+                        });
+                    })
                     .onErrorRetry(function (e) {
-                        console.log("error");
-                    }, 5, 1000)
+                        $scope.displayText.value = "ERROR!";
+                    }, 5, 1000);
             })
+            .do(function (e) {network.decrement();})
+            .finally(function (e) {network.decrement();})
+            .retry()
             .toReactiveProperty($scope);
 
     }]);
