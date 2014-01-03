@@ -18,7 +18,7 @@
 
 <body>
     <div ng-controller="NotifierCtrl">
-        <input type="text" rp-model="inputText">
+        <input type="text" ng-model="inputText.value">
         <button rp-command="downloadCommand" >download</button>
         <br/>
         {{displayText.value}}

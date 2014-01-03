@@ -17,7 +17,7 @@
 
 <body>
     <div ng-controller="SearchCtrl">
-        <input type="text" rp-model="inputText">
+        <input type="text" ng-model="inputText.value">
 
         <ul>
             <li ng-repeat="result in results.value">{{result}}</li>

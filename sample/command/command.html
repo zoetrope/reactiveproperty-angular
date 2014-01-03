@@ -16,11 +16,11 @@
 
 <body>
     <div ng-controller="CommandCtrl">
-        <input type="checkbox" rp-model="isChecked1">
-        <input type="checkbox" rp-model="isChecked2">
-        <input type="checkbox" rp-model="isChecked3">
-        <input type="checkbox" rp-model="isChecked4">
-        <input type="text" rp-model="currentText">
+        <input type="checkbox" ng-model="isChecked1.value">
+        <input type="checkbox" ng-model="isChecked2.value">
+        <input type="checkbox" ng-model="isChecked3.value">
+        <input type="checkbox" ng-model="isChecked4.value">
+        <input type="text" ng-model="currentText.value">
 
         <button rp-command="checkedCommand" rp-parameter="currentText.value">push</button>
     </div>
