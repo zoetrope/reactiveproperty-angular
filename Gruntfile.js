@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 
                     'src/extension/intro.js',
                     'src/extension/retryextension.js',
-                    'src/extension/torxprop.js',
+                    'src/extension/convertextension.js',
                     'src/extension/outro.js',
 
                     'src/directive/intro.js',
