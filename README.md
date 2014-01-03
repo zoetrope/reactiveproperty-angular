@@ -1,12 +1,12 @@
 # ReactiveProperty for AngularJS
 
-ReactiveProperty
-* http://reactiveproperty.codeplex.com/
+* ReactiveProperty
+  * http://reactiveproperty.codeplex.com/
 
-RxJS
-* https://github.com/Reactive-Extensions/RxJS
+* RxJS
+  * https://github.com/Reactive-Extensions/RxJS
 
-## Usage
+## Install
 
 > bower install reactivepropety-angular
 
