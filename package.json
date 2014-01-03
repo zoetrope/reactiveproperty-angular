@@ -2,7 +2,7 @@
     "name": "reactiveproperty-angular",
     "description": "ReactiveProperty for AngularJS",
     "version": "0.1.0",
-    "main": "rxprop.ng.js",
+    "main": "reactiveproperty-angular.js",
     "devDependencies": {
         "grunt": "~0.4.2",
         "grunt-contrib-watch": "~0.5.3",

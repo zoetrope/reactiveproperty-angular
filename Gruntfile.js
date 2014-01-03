@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                     'src/directive/rpmodel.js',
                     'src/directive/rpevent.js'
                 ],
-                dest: 'rxprop.ng.js'
+                dest: 'reactiveproperty-angular.js'
             }
         },
         watch: {

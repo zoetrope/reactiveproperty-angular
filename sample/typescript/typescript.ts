@@ -1,7 +1,7 @@
 /// <reference path="d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
 /// <reference path="d.ts/DefinitelyTyped/rx.js/rx.d.ts" />
 /// <reference path="d.ts/DefinitelyTyped/rx.js/rx.time.d.ts" />
-/// <reference path="d.ts/ReactiveProperty/rxprop.ng.d.ts" />
+/// <reference path="d.ts/ReactiveProperty/reactiveproperty-angular.d.ts" />
 
 'use strict';
 
