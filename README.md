@@ -1,5 +1,7 @@
 # ReactiveProperty for AngularJS
 
+A port of ReactiveProperty for AngularJS
+
 * ReactiveProperty
   * http://reactiveproperty.codeplex.com/
 
