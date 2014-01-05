@@ -2,11 +2,17 @@
 /// <reference path="../DefinitelyTyped/rx.js/rx.d.ts" />
 
 declare module rxprop {
+
+    enum ReactivePropertyMode {
+        None,
+        DistinctUntilChanged,
+        RaiseLatestValueOnSubscribe
+    }
     export interface ReactiveProperty<T> extends Rx.Observable<T>, Rx.Observer<T>, Rx.IDisposable {
         value: T;
     }
     interface ReactivePropertyStatic {
-        new<T> ($scope:ng.IScope, initValue?:T): ReactiveProperty<T>;
+        new<T> ($scope:ng.IScope, initValue?:T, mode?:ReactivePropertyMode): ReactiveProperty<T>;
     }
     export var ReactiveProperty:ReactivePropertyStatic;
 
@@ -45,7 +51,7 @@ declare module rxprop {
 
 declare module Rx {
     export interface Observable<T> {
-        toReactiveProperty : ($scope:ng.IScope) => rxprop.ReactiveProperty<T>;
+        toReactiveProperty : ($scope:ng.IScope, initValue?:T, mode?:rxprop.ReactivePropertyMode) => rxprop.ReactiveProperty<T>;
         toReactiveCollection : ($scope:ng.IScope) => rxprop.ReactiveCollection<T>;
         toReactiveCommand : ($scope:ng.IScope) => rxprop.ReactiveCommand<T>;
 

@@ -16,7 +16,7 @@ app.controller("ValidationCtrl", ["$scope",
             .toReactiveProperty($scope);
 
         $scope.displayCommand = $scope.inputText.select(function (_) {
-            return $scope.myform.inputText.$valid;
+            return $scope.myform ? $scope.myform.inputText.$valid : false;
         }).toReactiveCommand($scope);
 
         $scope.displayCommand.subscribe(function (v) {

@@ -1,3 +1,9 @@
+    rxprop.ReactivePropertyMode = {
+        None: 0,
+        DistinctUntilChanged: 1,
+        RaiseLatestValueOnSubscribe: 2
+    };
+
     var ReactiveProperty = rxprop.ReactiveProperty = (function (_super) {
         Rx.Internals.inherits(ReactiveProperty, _super);
 
@@ -5,7 +11,7 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveProperty(scope, initValue, source) {
+        function ReactiveProperty(scope, initValue, mode, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
@@ -14,16 +20,25 @@
 
             var self = this;
 
+            if (!initValue) {
+                this.value = initValue;
+            }
+            if (!mode) {
+                mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
+            }
             if (!source) {
                 source = Rx.Observable.never();
             }
 
-            if (initValue) {
-                this.value = initValue;
+            var merge = source.merge(this.anotherTrigger);
+            if ((mode & rxprop.ReactivePropertyMode.DistinctUntilChanged) == rxprop.ReactivePropertyMode.DistinctUntilChanged) {
+                merge = merge.distinctUntilChanged();
             }
-
-            var merge = source.merge(this.anotherTrigger).distinctUntilChanged();
-            var connectable = merge.publish();
+            if ((mode & rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) == rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) {
+                var connectable = merge.publishValue(initValue);
+            } else {
+                var connectable = merge.publish();
+            }
 
             this.observable = connectable.asObservable();
             this.raiseSubscription = connectable.subscribe(
@@ -40,7 +55,9 @@
                     return self.value;
                 },
                 function (newVal, oldVal) {
-                    self.anotherTrigger.onNext(newVal);
+                    if (newVal !== undefined) {
+                        self.anotherTrigger.onNext(newVal);
+                    }
                 });
 
             this.sourceDisposable = connectable.connect();
