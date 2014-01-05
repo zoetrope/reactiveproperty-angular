@@ -11,7 +11,7 @@ angular.forEach(
                     return function(scope, element, attr) {
                         element.on(name, function(event) {
                             scope.$apply(function() {
-                                bindValue.assign(scope, {$event:event})
+                                bindValue.assign(scope, event)
                             });
                         });
                     };

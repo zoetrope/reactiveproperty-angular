@@ -20,12 +20,9 @@ module controller {
 
         constructor(private $scope: TSScope)
         {
-            $scope.inputText = new rxprop.ReactiveProperty<string>($scope);
+            $scope.inputText = new rxprop.ReactiveProperty<string>($scope, "");
 
             $scope.displayText = $scope.inputText
-                .where(function (x) {
-                    return x != null;
-                })
                 .select(function (x) {
                     return x.toUpperCase();
                 })

@@ -27,13 +27,13 @@
 
             var self = this;
 
-            if (!initValue) {
+            if (initValue !== undefined) {
                 this.value = initValue;
             }
-            if (!mode) {
+            if (mode === undefined) {
                 mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
             }
-            if (!source) {
+            if (source === undefined) {
                 source = Rx.Observable.never();
             }
 
@@ -104,7 +104,7 @@
             this.isDisposed = false;
             var self = this;
 
-            if (source) {
+            if (source !== undefined) {
                 this.sourceDisposable = source.subscribe(
                     function (val) {
                         self.values.push(val)
@@ -150,7 +150,7 @@
             this.isDisposed = false;
             var self = this;
 
-            if (source) {
+            if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
                         self.isCanExecute = b ? true : false;
@@ -208,7 +208,7 @@
         function CountNotifier(max) {
             _super.call(this, subscribe);
 
-            if (!max) {
+            if (max === undefined) {
                 max = 2147483647;
             }
             this.count = 0;
@@ -279,8 +279,8 @@
         var source = this;
 
         var result = Rx.Observable.defer(function () {
-            if (!retryCount) retryCount = 0;
-            if (!delay) delay = 0;
+            if (retryCount === undefined) retryCount = 0;
+            if (delay === undefined) delay = 0;
             var empty = Rx.Observable.empty();
             var count = 0;
 
@@ -359,7 +359,7 @@ angular.forEach(
                     return function(scope, element, attr) {
                         element.on(name, function(event) {
                             scope.$apply(function() {
-                                bindValue.assign(scope, {$event:event})
+                                bindValue.assign(scope, event)
                             });
                         });
                     };

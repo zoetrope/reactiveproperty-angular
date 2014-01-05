@@ -7,7 +7,7 @@
             this.isDisposed = false;
             var self = this;
 
-            if (source) {
+            if (source !== undefined) {
                 this.sourceDisposable = source.subscribe(
                     function (val) {
                         self.values.push(val)

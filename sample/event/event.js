@@ -4,14 +4,11 @@ var app = angular.module('app', ['rxprop']);
 
 app.controller("EventCtrl", ["$scope",
     function ($scope) {
-        $scope.mousemove = new rxprop.ReactiveProperty($scope);
+        $scope.mousemove = new rxprop.ReactiveProperty($scope, undefined, rxprop.ReactivePropertyMode.DistinctUntilChanged);
 
         $scope.currentPoint = $scope.mousemove
-            .where(function (e) {
-                return e && e.$event;
-            })
             .select(function (e) {
-                return {x: e.$event.x, y: e.$event.y};
+                return {x: e.x, y: e.y};
             })
             .toReactiveProperty($scope);
 

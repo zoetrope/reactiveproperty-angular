@@ -2,8 +2,8 @@
         var source = this;
 
         var result = Rx.Observable.defer(function () {
-            if (!retryCount) retryCount = 0;
-            if (!delay) delay = 0;
+            if (retryCount === undefined) retryCount = 0;
+            if (delay === undefined) delay = 0;
             var empty = Rx.Observable.empty();
             var count = 0;
 

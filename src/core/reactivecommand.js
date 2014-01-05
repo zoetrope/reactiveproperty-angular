@@ -15,7 +15,7 @@
             this.isDisposed = false;
             var self = this;
 
-            if (source) {
+            if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
                         self.isCanExecute = b ? true : false;

@@ -15,7 +15,7 @@
         function CountNotifier(max) {
             _super.call(this, subscribe);
 
-            if (!max) {
+            if (max === undefined) {
                 max = 2147483647;
             }
             this.count = 0;

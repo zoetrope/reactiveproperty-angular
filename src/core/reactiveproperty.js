@@ -20,13 +20,13 @@
 
             var self = this;
 
-            if (!initValue) {
+            if (initValue !== undefined) {
                 this.value = initValue;
             }
-            if (!mode) {
+            if (mode === undefined) {
                 mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
             }
-            if (!source) {
+            if (source === undefined) {
                 source = Rx.Observable.never();
             }
 
