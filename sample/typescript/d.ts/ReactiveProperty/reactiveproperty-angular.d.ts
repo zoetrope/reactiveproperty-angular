@@ -20,7 +20,7 @@ declare module rxprop {
         values: Array<T>;
     }
     interface ReactiveCollectionStatic {
-        new<T> ($scope:ng.IScope): ReactiveCollection<T>;
+        new<T> ($scope:ng.IScope, bufferSize?:number, reverse?:boolean): ReactiveCollection<T>;
     }
     export var ReactiveCollection:ReactiveCollectionStatic;
 
@@ -52,7 +52,7 @@ declare module rxprop {
 declare module Rx {
     export interface Observable<T> {
         toReactiveProperty : ($scope:ng.IScope, initValue?:T, mode?:rxprop.ReactivePropertyMode) => rxprop.ReactiveProperty<T>;
-        toReactiveCollection : ($scope:ng.IScope) => rxprop.ReactiveCollection<T>;
+        toReactiveCollection : ($scope:ng.IScope, bufferSize?:number, reverse?:boolean) => rxprop.ReactiveCollection<T>;
         toReactiveCommand : ($scope:ng.IScope) => rxprop.ReactiveCommand<T>;
 
         onErrorRetry<TException>(onError:(ex:TException)=> void, retryCount?:number, delay?:number): Observable<T>;

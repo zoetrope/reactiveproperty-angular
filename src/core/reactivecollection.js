@@ -1,16 +1,29 @@
     var ReactiveCollection = rxprop.ReactiveCollection = (function () {
 
-        function ReactiveCollection(scope, source) {
+        function ReactiveCollection(scope, bufferSize, reverse, source) {
             this.scope = scope;
 
-            this.values = []
+            this.bufferSize = bufferSize;
+            this.reverse = reverse;
+            this.values = [];
             this.isDisposed = false;
             var self = this;
 
             if (source !== undefined) {
                 this.sourceDisposable = source.subscribe(
                     function (val) {
-                        self.values.push(val)
+                        if (self.reverse) {
+                            self.values.unshift(val)
+                        } else {
+                            self.values.push(val);
+                        }
+                        if (self.bufferSize && self.values.length > self.bufferSize) {
+                            if (self.reverse) {
+                                self.values.pop();
+                            } else {
+                                self.values.shift();
+                            }
+                        }
                         if (!self.scope.$$phase) {
                             self.scope.$apply();
                         }
