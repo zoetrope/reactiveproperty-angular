@@ -1,7 +1,7 @@
 {
   "name": "reactiveproperty-angular",
   "description": "ReactiveProperty for AngularJS",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "reactiveproperty-angular.js",
   "dependencies": {
     "angular": "~1.2.6",
