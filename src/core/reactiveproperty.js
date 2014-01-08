@@ -21,7 +21,7 @@
             var self = this;
 
             if (initValue !== undefined) {
-                this.value = initValue;
+                this.val = initValue;
             }
             if (mode === undefined) {
                 mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
@@ -43,25 +43,26 @@
             this.observable = connectable.asObservable();
             this.raiseSubscription = connectable.subscribe(
                 function (val) {
-                    self.value = val;
+                    self.val = val;
                     if (!self.scope.$$phase) {
                         self.scope.$apply();
                     }
                 }
             );
 
-            scope.$watch(
-                function () {
-                    return self.value;
-                },
-                function (newVal, oldVal) {
-                    if (newVal !== undefined) {
-                        self.anotherTrigger.onNext(newVal);
-                    }
-                });
-
             this.sourceDisposable = connectable.connect();
         }
+
+        Object.defineProperty(ReactiveProperty.prototype, "value", {
+            get: function () {
+                return this.val;
+            },
+            set: function (val) {
+                this.anotherTrigger.onNext(val);
+            },
+            enumerable: true,
+            configurable: true
+        });
 
         Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
             onCompleted: function () {
