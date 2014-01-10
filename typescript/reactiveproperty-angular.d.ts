@@ -44,7 +44,7 @@ declare module rxprop {
         decrement();
     }
     interface CountNotifierStatic {
-        new<T> (max?:number): CountNotifier;
+        new (max?:number): CountNotifier;
     }
     export var CountNotifier:CountNotifierStatic;
 }

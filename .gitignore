@@ -1,6 +1,7 @@
 node_modules
 bower_components
 sample/lib
+sample/typescript/d.ts
 
 .idea
 *.iml
