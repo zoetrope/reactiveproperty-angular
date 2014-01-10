@@ -41,16 +41,57 @@ module.exports = function (grunt) {
                 files: ['src/**/*.js'],
                 tasks: ['compile']
             }
+        },
+        connect: {
+            options: {
+                port: 9002,
+                hostname: 'localhost'
+            },
+            samples: {
+                options: {
+                    base: './'
+                }
+            }
+        },
+        protractor: {
+            options: {
+                configFile: "node_modules/protractor/referenceConf.js",
+                keepAlive: true,
+                noColor: false
+            },
+            e2e_test: {
+                options: {
+                    configFile: "test/conf.js"
+                }
+            }
+        },
+        shell: {
+            options: {
+                stdout: true
+            },
+            selenium: {
+                command: "./node_modules/protractor/bin/webdriver-manager start",
+                options: {
+                    stdout: false,
+                    async: true
+                }
+            },
+            protractor_install: {
+                command: "./node_modules/protractor/bin/webdriver-manager update"
+            }
         }
     });
 
     grunt.registerTask('setup', ['bower']);
 
-    grunt.registerTask('compile', ['concat:rxprop']);
+    grunt.registerTask('build', ['concat:rxprop']);
 
-    grunt.registerTask('default', ['setup', 'compile']);
+    grunt.registerTask('default', ['setup', 'build']);
 
-    grunt.registerTask('run', ['compile', 'watch:rxprop']);
+    grunt.registerTask('run', ['build', 'watch:rxprop']);
+
+    grunt.registerTask('prepare_test', ['shell:protractor_install', 'shell:selenium']);
+    grunt.registerTask('test', ['build', 'connect:samples', 'protractor:e2e_test']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
