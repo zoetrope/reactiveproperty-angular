@@ -12,20 +12,26 @@
             if (source !== undefined) {
                 this.sourceDisposable = source.subscribe(
                     function (val) {
-                        if (self.reverse) {
-                            self.values.unshift(val)
-                        } else {
-                            self.values.push(val);
-                        }
-                        if (self.bufferSize && self.values.length > self.bufferSize) {
+                        var addVal = function () {
                             if (self.reverse) {
-                                self.values.pop();
+                                self.values.unshift(val)
                             } else {
-                                self.values.shift();
+                                self.values.push(val);
                             }
-                        }
-                        if (!self.scope.$$phase) {
-                            self.scope.$apply();
+                            if (self.bufferSize && self.values.length > self.bufferSize) {
+                                if (self.reverse) {
+                                    self.values.pop();
+                                } else {
+                                    self.values.shift();
+                                }
+                            }
+                        };
+                        if (self.scope.$$phase) {
+                            addVal();
+                        } else {
+                            self.scope.$apply(function(){
+                                addVal();
+                            });
                         }
                     }
                 );

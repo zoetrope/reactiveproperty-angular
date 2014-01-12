@@ -18,9 +18,15 @@
             if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
-                        self.isCanExecute = b ? true : false;
-                        if (!self.scope.$$phase) {
-                            self.scope.$apply();
+                        var setCanExecute = function() {
+                            self.isCanExecute = b ? true : false;
+                        };
+                        if (self.scope.$$phase) {
+                            setCanExecute();
+                        } else {
+                            self.scope.$apply(function(){
+                                setCanExecute();
+                            });
                         }
                     })
             }
@@ -29,9 +35,16 @@
         Rx.Internals.addProperties(ReactiveCommand.prototype, {
 
             execute: function (param) {
-                this.subject.onNext(param);
-                if (!this.scope.$$phase) {
-                    this.scope.$apply();
+                var self = this;
+                var onNext = function() {
+                    self.subject.onNext(param);
+                };
+                if (this.scope.$$phase) {
+                    onNext();
+                } else {
+                    this.scope.$apply(function(){
+                        onNext();
+                    });
                 }
             },
 

@@ -50,9 +50,15 @@
             this.observable = connectable.asObservable();
             this.raiseSubscription = connectable.subscribe(
                 function (val) {
-                    self.val = val;
-                    if (!self.scope.$$phase) {
-                        self.scope.$apply();
+                    var setVal = function() {
+                        self.val = val;
+                    };
+                    if (self.scope.$$phase) {
+                        setVal();
+                    } else {
+                        self.scope.$apply(function(){
+                            setVal();
+                        });
                     }
                 }
             );
@@ -110,20 +116,26 @@
             if (source !== undefined) {
                 this.sourceDisposable = source.subscribe(
                     function (val) {
-                        if (self.reverse) {
-                            self.values.unshift(val)
-                        } else {
-                            self.values.push(val);
-                        }
-                        if (self.bufferSize && self.values.length > self.bufferSize) {
+                        var addVal = function () {
                             if (self.reverse) {
-                                self.values.pop();
+                                self.values.unshift(val)
                             } else {
-                                self.values.shift();
+                                self.values.push(val);
                             }
-                        }
-                        if (!self.scope.$$phase) {
-                            self.scope.$apply();
+                            if (self.bufferSize && self.values.length > self.bufferSize) {
+                                if (self.reverse) {
+                                    self.values.pop();
+                                } else {
+                                    self.values.shift();
+                                }
+                            }
+                        };
+                        if (self.scope.$$phase) {
+                            addVal();
+                        } else {
+                            self.scope.$apply(function(){
+                                addVal();
+                            });
                         }
                     }
                 );
@@ -167,9 +179,15 @@
             if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
                     .subscribe(function(b){
-                        self.isCanExecute = b ? true : false;
-                        if (!self.scope.$$phase) {
-                            self.scope.$apply();
+                        var setCanExecute = function() {
+                            self.isCanExecute = b ? true : false;
+                        };
+                        if (self.scope.$$phase) {
+                            setCanExecute();
+                        } else {
+                            self.scope.$apply(function(){
+                                setCanExecute();
+                            });
                         }
                     })
             }
@@ -178,9 +196,16 @@
         Rx.Internals.addProperties(ReactiveCommand.prototype, {
 
             execute: function (param) {
-                this.subject.onNext(param);
-                if (!this.scope.$$phase) {
-                    this.scope.$apply();
+                var self = this;
+                var onNext = function() {
+                    self.subject.onNext(param);
+                };
+                if (this.scope.$$phase) {
+                    onNext();
+                } else {
+                    this.scope.$apply(function(){
+                        onNext();
+                    });
                 }
             },
 
