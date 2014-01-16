@@ -4,7 +4,8 @@ exports.config = {
         browserName: "chrome"
     },
     specs: ["*_spec.js"],
-    baseUrl: 'http://localhost:9002/',
+    baseUrl: "http://localhost:9002/",
+    framework: "jasmine",
     jasmineNodeOpts: {
         showColors: true
     }

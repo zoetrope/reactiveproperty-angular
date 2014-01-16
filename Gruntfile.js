@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         watch: {
             rxprop: {
                 files: ['src/**/*.js'],
-                tasks: ['compile']
+                tasks: ['build']
             }
         },
         connect: {
@@ -55,7 +55,6 @@ module.exports = function (grunt) {
         },
         protractor: {
             options: {
-                configFile: "node_modules/protractor/referenceConf.js",
                 keepAlive: true,
                 noColor: false
             },
