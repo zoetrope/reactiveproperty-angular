@@ -31,7 +31,8 @@ module.exports = function (grunt) {
                     'src/directive/intro.js',
                     'src/directive/rpcommand.js',
                     'src/directive/rpsubmit.js',
-                    'src/directive/rpevent.js'
+                    'src/directive/rpevent.js',
+                    'src/core/observablemessage.js'
                 ],
                 dest: 'reactiveproperty-angular.js'
             }

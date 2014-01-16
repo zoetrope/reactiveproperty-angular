@@ -1,0 +1,38 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <script type="text/javascript" src="../lib/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.lite.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="../../reactiveproperty-angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="messaging.js" charset="utf-8"></script>
+</head>
+
+<body>
+<div ng-controller="ParentCtrl">
+
+    <div ng-controller="OwnCtrl">
+        <input type="text" ng-model="inputText.value">
+        <button id="emitButton" rp-command="emitCommand" rp-parameter="inputText.value">emit</button>
+        <button id="broadcastButton" rp-command="broadcastCommand" rp-parameter="inputText.value">broadcast</button>
+        <div ng-controller="ChildCtrl">
+            <div>
+            Child = {{childReceived.value}}
+            </div>
+        </div>
+        <div>
+        Own = {{ownReceived.value}}
+        </div>
+    </div>
+    <div>
+    Parent = {{parentReceived.value}}
+    </div>
+</div>
+
+</body>
+
+</html>
