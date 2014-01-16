@@ -5,6 +5,20 @@
  */
 (function (root, undefined) {
     var rxprop = {};
+
+    if (root.Rx == null) {
+        throw new Error("can't find RxJS.");
+    }
+    var Rx = root.Rx;
+
+    if (root.angular == null) {
+        throw new Error("can't find AngularJS.");
+    }
+    var angular = root.angular;
+
+    angular.module('rxprop', []);
+
+
     rxprop.ReactivePropertyMode = {
         None: 0,
         DistinctUntilChanged: 1,
@@ -300,19 +314,43 @@
         return CountNotifier;
     }(Rx.Observable));
 
-
-    root.rxprop = rxprop;
-
-    //TODO: node.js用とかAMD用のコードを書く
-
-})(this);
-
-(function (root) {
-    if (root.Rx == null) {
-        throw new Error("can't find RxJS.");
-    }
-
-    var Rx = root.Rx;
+angular.module('rxprop').config(['$provide', function ($provide) {
+    $provide.decorator('$rootScope', ['$delegate', function ($delegate) {
+        Object.defineProperties($delegate.constructor.prototype, {
+            "$onAsObservable": {
+                value: function (name) {
+                    var scope = this;
+                    return Rx.Observable.create(function (observer) {
+                        var deregistration = scope.$on(name, function (ev, val) {
+                            observer.onNext({event: ev, value: val});
+                        });
+                        return Rx.Disposable.create(deregistration);
+                    });
+                },
+                enumerable: false
+            },
+            "$emitAsObserver": {
+                value: function (name) {
+                    var scope = this;
+                    return Rx.Observer.create(function (val) {
+                        scope.$emit(name, val);
+                    });
+                },
+                enumerable: false
+            },
+            "$broadcastAsObserver": {
+                value: function (name) {
+                    var scope = this;
+                    return Rx.Observer.create(function (val) {
+                        scope.$broadcast(name, val);
+                    });
+                },
+                enumerable: false
+            }
+        });
+        return $delegate;
+    }]);
+}]);
 
     Rx.Observable.prototype.onErrorRetry = function (onError, retryCount, delay) {
         var source = this;
@@ -359,10 +397,6 @@
         var source = this;
         return new rxprop.ReactiveCommand($scope, source);
     };
-
-
-})(this);
-angular.module('rxprop', [])
 
 angular.module('rxprop')
     .directive('rpCommand', ['$compile', function ($compile) {
@@ -429,40 +463,9 @@ angular.forEach(
 );
 angular.module('rxprop').directive(rpEventDirectives);
 
-angular.module('rxprop').config(['$provide', function ($provide) {
-    $provide.decorator('$rootScope', ['$delegate', function ($delegate) {
-        Object.defineProperties($delegate.constructor.prototype, {
-            "$onAsObservable": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observable.create(function (observer) {
-                        var deregistration = scope.$on(name, function (ev, val) {
-                            observer.onNext({event: ev, value: val});
-                        });
-                        return Rx.Disposable.create(deregistration);
-                    });
-                },
-                enumerable: false
-            },
-            "$emitAsObserver": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observer.create(function (val) {
-                        scope.$emit(name, val);
-                    });
-                },
-                enumerable: false
-            },
-            "$broadcastAsObserver": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observer.create(function (val) {
-                        scope.$broadcast(name, val);
-                    });
-                },
-                enumerable: false
-            }
-        });
-        return $delegate;
-    }]);
-}]);
+
+    root.rxprop = rxprop;
+
+    //TODO: node.js用とかAMD用のコードを書く
+
+})(this);

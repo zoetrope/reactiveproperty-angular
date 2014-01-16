@@ -16,23 +16,22 @@ module.exports = function (grunt) {
         concat: {
             rxprop: {
                 src: [
-                    'src/core/intro.js',
+                    'src/intro.js',
+
                     'src/core/reactiveproperty.js',
                     'src/core/reactivecollection.js',
                     'src/core/reactivecommand.js',
                     'src/core/countnotifier.js',
-                    'src/core/outro.js',
+                    'src/core/observablemessage.js',
 
-                    'src/extension/intro.js',
                     'src/extension/retryextension.js',
                     'src/extension/convertextension.js',
-                    'src/extension/outro.js',
 
-                    'src/directive/intro.js',
                     'src/directive/rpcommand.js',
                     'src/directive/rpsubmit.js',
                     'src/directive/rpevent.js',
-                    'src/core/observablemessage.js'
+
+                    'src/outro.js'
                 ],
                 dest: 'reactiveproperty-angular.js'
             }
