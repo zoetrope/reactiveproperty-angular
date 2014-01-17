@@ -20,7 +20,7 @@ declare module rxprop {
         values: Array<T>;
     }
     interface ReactiveCollectionStatic {
-        new<T> ($scope:ng.IScope, bufferSize?:number, reverse?:boolean): ReactiveCollection<T>;
+        new<T> ($scope:ng.IScope, initValues?:T[], bufferSize?:number, reverse?:boolean): ReactiveCollection<T>;
     }
     export var ReactiveCollection:ReactiveCollectionStatic;
 
@@ -29,7 +29,7 @@ declare module rxprop {
         canExecute(param) : boolean;
     }
     interface ReactiveCommandStatic {
-        new<T> (scope:ng.IScope): ReactiveCommand<T>;
+        new<T> (scope:ng.IScope, action?:(T)=>void): ReactiveCommand<T>;
     }
     export var ReactiveCommand:ReactiveCommandStatic;
 
@@ -52,8 +52,8 @@ declare module rxprop {
 declare module Rx {
     export interface Observable<T> {
         toReactiveProperty : ($scope:ng.IScope, initValue?:T, mode?:rxprop.ReactivePropertyMode) => rxprop.ReactiveProperty<T>;
-        toReactiveCollection : ($scope:ng.IScope, bufferSize?:number, reverse?:boolean) => rxprop.ReactiveCollection<T>;
-        toReactiveCommand : ($scope:ng.IScope) => rxprop.ReactiveCommand<T>;
+        toReactiveCollection : ($scope:ng.IScope, initValues?:T[], bufferSize?:number, reverse?:boolean) => rxprop.ReactiveCollection<T>;
+        toReactiveCommand : ($scope:ng.IScope, action?:(T)=>void) => rxprop.ReactiveCommand<T>;
 
         onErrorRetry<TException>(onError:(ex:TException)=> void, retryCount?:number, delay?:number): Observable<T>;
     }

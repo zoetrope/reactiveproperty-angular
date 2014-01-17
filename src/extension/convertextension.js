@@ -4,9 +4,9 @@
         return new rxprop.ReactiveProperty($scope, initValue, mode, source);
     };
 
-    Rx.Observable.prototype.toReactiveCollection = function ($scope, bufferSize, reverse) {
+    Rx.Observable.prototype.toReactiveCollection = function ($scope, initValues, bufferSize, reverse) {
         var source = this;
-        return new rxprop.ReactiveCollection($scope, bufferSize, reverse, source);
+        return new rxprop.ReactiveCollection($scope, initValues, bufferSize, reverse, source);
     };
 
     Rx.Observable.prototype.toReactiveCommand = function ($scope, action) {
