@@ -7,7 +7,7 @@ angular.module('rxprop')
             scope: false,
             link: function postLink(scope, element, attrs) {
 
-                element.attr("ng-submit", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
+                element.attr("ng-submit", attrs.rpSubmit + ".execute(" + (attrs.rpParameter || "") + ")");
                 element.removeAttr("rp-submit");
                 element.removeAttr("rp-parameter");
 
