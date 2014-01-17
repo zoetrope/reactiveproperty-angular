@@ -30,7 +30,7 @@
                         if (self.scope.$$phase) {
                             addVal();
                         } else {
-                            self.scope.$apply(function(){
+                            self.scope.$apply(function () {
                                 addVal();
                             });
                         }

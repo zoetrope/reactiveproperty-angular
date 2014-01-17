@@ -38,7 +38,7 @@
 
                 this.statusChanged.onNext(rxprop.CountChangedStatus.Increment);
 
-                if(this.count === this.max) {
+                if (this.count === this.max) {
                     this.statusChanged.onNext(rxprop.CountChangedStatus.Max);
                 }
 
@@ -57,7 +57,7 @@
 
                 this.statusChanged.onNext(rxprop.CountChangedStatus.Decrement);
 
-                if(this.count === 0) {
+                if (this.count === 0) {
                     this.statusChanged.onNext(rxprop.CountChangedStatus.Empty);
                 }
 

@@ -1,4 +1,3 @@
-
     var ReactiveCommand = rxprop.ReactiveCommand = (function (_super) {
         Rx.Internals.inherits(ReactiveCommand, _super);
 
@@ -17,14 +16,14 @@
 
             if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
-                    .subscribe(function(b){
-                        var setCanExecute = function() {
+                    .subscribe(function (b) {
+                        var setCanExecute = function () {
                             self.isCanExecute = b ? true : false;
                         };
                         if (self.scope.$$phase) {
                             setCanExecute();
                         } else {
-                            self.scope.$apply(function(){
+                            self.scope.$apply(function () {
                                 setCanExecute();
                             });
                         }
@@ -40,13 +39,13 @@
 
             execute: function (param) {
                 var self = this;
-                var onNext = function() {
+                var onNext = function () {
                     self.subject.onNext(param);
                 };
                 if (this.scope.$$phase) {
                     onNext();
                 } else {
-                    this.scope.$apply(function(){
+                    this.scope.$apply(function () {
                         onNext();
                     });
                 }
@@ -59,10 +58,10 @@
             dispose: function () {
                 if (this.isDisposed) return;
                 this.isDisposed = true;
-                if(this.canExecuteSubscription){
+                if (this.canExecuteSubscription) {
                     this.canExecuteSubscription.dispose();
                 }
-                if(this.actionDisposable){
+                if (this.actionDisposable) {
                     this.actionDisposable.dispose();
                 }
 

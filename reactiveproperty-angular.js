@@ -1,5 +1,5 @@
 /**
- * @license ReactiveProperty for AngularJS v0.1.3
+ * @license ReactiveProperty for AngularJS v0.1.4
  * Copyright (c) 2014 zoetrope https://github.com/zoetrope/reactiveproperty-angular/
  * License: MIT
  */
@@ -64,13 +64,13 @@
             this.observable = connectable.asObservable();
             this.raiseSubscription = connectable.subscribe(
                 function (val) {
-                    var setVal = function() {
+                    var setVal = function () {
                         self.val = val;
                     };
                     if (self.scope.$$phase) {
                         setVal();
                     } else {
-                        self.scope.$apply(function(){
+                        self.scope.$apply(function () {
                             setVal();
                         });
                     }
@@ -148,7 +148,7 @@
                         if (self.scope.$$phase) {
                             addVal();
                         } else {
-                            self.scope.$apply(function(){
+                            self.scope.$apply(function () {
                                 addVal();
                             });
                         }
@@ -207,7 +207,6 @@
         return ReactiveCollection;
     }(Rx.Observable));
 
-
     var ReactiveCommand = rxprop.ReactiveCommand = (function (_super) {
         Rx.Internals.inherits(ReactiveCommand, _super);
 
@@ -226,14 +225,14 @@
 
             if (source !== undefined) {
                 this.canExecuteSubscription = source.distinctUntilChanged()
-                    .subscribe(function(b){
-                        var setCanExecute = function() {
+                    .subscribe(function (b) {
+                        var setCanExecute = function () {
                             self.isCanExecute = b ? true : false;
                         };
                         if (self.scope.$$phase) {
                             setCanExecute();
                         } else {
-                            self.scope.$apply(function(){
+                            self.scope.$apply(function () {
                                 setCanExecute();
                             });
                         }
@@ -249,13 +248,13 @@
 
             execute: function (param) {
                 var self = this;
-                var onNext = function() {
+                var onNext = function () {
                     self.subject.onNext(param);
                 };
                 if (this.scope.$$phase) {
                     onNext();
                 } else {
-                    this.scope.$apply(function(){
+                    this.scope.$apply(function () {
                         onNext();
                     });
                 }
@@ -268,10 +267,10 @@
             dispose: function () {
                 if (this.isDisposed) return;
                 this.isDisposed = true;
-                if(this.canExecuteSubscription){
+                if (this.canExecuteSubscription) {
                     this.canExecuteSubscription.dispose();
                 }
-                if(this.actionDisposable){
+                if (this.actionDisposable) {
                     this.actionDisposable.dispose();
                 }
 
@@ -325,7 +324,7 @@
 
                 this.statusChanged.onNext(rxprop.CountChangedStatus.Increment);
 
-                if(this.count === this.max) {
+                if (this.count === this.max) {
                     this.statusChanged.onNext(rxprop.CountChangedStatus.Max);
                 }
 
@@ -344,7 +343,7 @@
 
                 this.statusChanged.onNext(rxprop.CountChangedStatus.Decrement);
 
-                if(this.count === 0) {
+                if (this.count === 0) {
                     this.statusChanged.onNext(rxprop.CountChangedStatus.Empty);
                 }
 
@@ -355,43 +354,43 @@
         return CountNotifier;
     }(Rx.Observable));
 
-angular.module('rxprop').config(['$provide', function ($provide) {
-    $provide.decorator('$rootScope', ['$delegate', function ($delegate) {
-        Object.defineProperties($delegate.constructor.prototype, {
-            "$onAsObservable": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observable.create(function (observer) {
-                        var deregistration = scope.$on(name, function (ev, val) {
-                            observer.onNext({event: ev, value: val});
+    angular.module('rxprop').config(['$provide', function ($provide) {
+        $provide.decorator('$rootScope', ['$delegate', function ($delegate) {
+            Object.defineProperties($delegate.constructor.prototype, {
+                "$onAsObservable": {
+                    value: function (name) {
+                        var scope = this;
+                        return Rx.Observable.create(function (observer) {
+                            var deregistration = scope.$on(name, function (ev, val) {
+                                observer.onNext({event: ev, value: val});
+                            });
+                            return Rx.Disposable.create(deregistration);
                         });
-                        return Rx.Disposable.create(deregistration);
-                    });
+                    },
+                    enumerable: false
                 },
-                enumerable: false
-            },
-            "$emitAsObserver": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observer.create(function (val) {
-                        scope.$emit(name, val);
-                    });
+                "$emitAsObserver": {
+                    value: function (name) {
+                        var scope = this;
+                        return Rx.Observer.create(function (val) {
+                            scope.$emit(name, val);
+                        });
+                    },
+                    enumerable: false
                 },
-                enumerable: false
-            },
-            "$broadcastAsObserver": {
-                value: function (name) {
-                    var scope = this;
-                    return Rx.Observer.create(function (val) {
-                        scope.$broadcast(name, val);
-                    });
-                },
-                enumerable: false
-            }
-        });
-        return $delegate;
+                "$broadcastAsObserver": {
+                    value: function (name) {
+                        var scope = this;
+                        return Rx.Observer.create(function (val) {
+                            scope.$broadcast(name, val);
+                        });
+                    },
+                    enumerable: false
+                }
+            });
+            return $delegate;
+        }]);
     }]);
-}]);
 
     Rx.Observable.prototype.onErrorRetry = function (onError, retryCount, delay) {
         var source = this;
@@ -423,7 +422,6 @@ angular.module('rxprop').config(['$provide', function ($provide) {
         return result;
     };
 
-
     Rx.Observable.prototype.toReactiveProperty = function ($scope, initValue, mode) {
         var source = this;
         return new rxprop.ReactiveProperty($scope, initValue, mode, source);
@@ -439,70 +437,69 @@ angular.module('rxprop').config(['$provide', function ($provide) {
         return new rxprop.ReactiveCommand($scope, action, source);
     };
 
-angular.module('rxprop')
-    .directive('rpCommand', ['$compile', function ($compile) {
-        return {
-            restrict: 'A',
-            priority: 200,
-            terminal: true,
-            scope: false,
-            link: function postLink(scope, element, attrs) {
-
-                element.attr("ng-click", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
-                element.attr("ng-disabled", "!" + attrs.rpCommand + ".canExecute()");
-                element.removeAttr("rp-command");
-                element.removeAttr("rp-parameter");
-
-                var linkfn = $compile(element)
-                linkfn(scope)
-            }
-
-        };
-    }]);
-
-angular.module('rxprop')
-    .directive('rpSubmit', ['$compile', function ($compile) {
-        return {
-            restrict: 'A',
-            priority: 200,
-            terminal: true,
-            scope: false,
-            link: function postLink(scope, element, attrs) {
-
-                element.attr("ng-submit", attrs.rpSubmit + ".execute(" + (attrs.rpParameter || "") + ")");
-                element.removeAttr("rp-submit");
-                element.removeAttr("rp-parameter");
-
-                var linkfn = $compile(element)
-                linkfn(scope)
-            }
-
-        };
-    }]);
-
-
-var rpEventDirectives = {};
-angular.forEach(
-    'click dblclick mousedown mouseup mouseover mouseout mousemove mouseenter mouseleave keydown keyup keypress submit focus blur copy cut paste'.split(' '),
-    function(name) {
-        var directiveName = 'rp' + name.charAt(0).toUpperCase() + name.slice(1);
-        rpEventDirectives[directiveName] = ['$parse', function($parse) {
+    angular.module('rxprop')
+        .directive('rpCommand', ['$compile', function ($compile) {
             return {
-                compile: function($element, attr) {
-                    var bindValue = $parse(attr[directiveName] + ".value");
-                    return function(scope, element, attr) {
-                        element.on(name, function(event) {
-                            scope.$apply(function() {
-                                bindValue.assign(scope, event)
-                            });
-                        });
-                    };
+                restrict: 'A',
+                priority: 200,
+                terminal: true,
+                scope: false,
+                link: function postLink(scope, element, attrs) {
+
+                    element.attr("ng-click", attrs.rpCommand + ".execute(" + (attrs.rpParameter || "") + ")");
+                    element.attr("ng-disabled", "!" + attrs.rpCommand + ".canExecute()");
+                    element.removeAttr("rp-command");
+                    element.removeAttr("rp-parameter");
+
+                    var linkfn = $compile(element)
+                    linkfn(scope)
                 }
+
             };
-        }];
-    }
-);
-angular.module('rxprop').directive(rpEventDirectives);
+        }]);
+
+    angular.module('rxprop')
+        .directive('rpSubmit', ['$compile', function ($compile) {
+            return {
+                restrict: 'A',
+                priority: 200,
+                terminal: true,
+                scope: false,
+                link: function postLink(scope, element, attrs) {
+
+                    element.attr("ng-submit", attrs.rpSubmit + ".execute(" + (attrs.rpParameter || "") + ")");
+                    element.removeAttr("rp-submit");
+                    element.removeAttr("rp-parameter");
+
+                    var linkfn = $compile(element)
+                    linkfn(scope)
+                }
+
+            };
+        }]);
+
+    var rpEventDirectives = {};
+    angular.forEach(
+        'click dblclick mousedown mouseup mouseover mouseout mousemove mouseenter mouseleave keydown keyup keypress submit focus blur copy cut paste'.split(' '),
+        function (name) {
+            var directiveName = 'rp' + name.charAt(0).toUpperCase() + name.slice(1);
+            rpEventDirectives[directiveName] = ['$parse', function ($parse) {
+                return {
+                    compile: function ($element, attr) {
+                        var bindValue = $parse(attr[directiveName] + ".value");
+                        return function (scope, element, attr) {
+                            element.on(name, function (event) {
+                                scope.$apply(function () {
+                                    bindValue.assign(scope, event)
+                                });
+                            });
+                        };
+                    }
+                };
+            }];
+        }
+    );
+    angular.module('rxprop').directive(rpEventDirectives);
 
 
     root.rxprop = rxprop;

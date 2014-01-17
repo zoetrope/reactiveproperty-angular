@@ -43,13 +43,13 @@
             this.observable = connectable.asObservable();
             this.raiseSubscription = connectable.subscribe(
                 function (val) {
-                    var setVal = function() {
+                    var setVal = function () {
                         self.val = val;
                     };
                     if (self.scope.$$phase) {
                         setVal();
                     } else {
-                        self.scope.$apply(function(){
+                        self.scope.$apply(function () {
                             setVal();
                         });
                     }
