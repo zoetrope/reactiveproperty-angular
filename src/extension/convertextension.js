@@ -9,7 +9,7 @@
         return new rxprop.ReactiveCollection($scope, bufferSize, reverse, source);
     };
 
-    Rx.Observable.prototype.toReactiveCommand = function ($scope) {
+    Rx.Observable.prototype.toReactiveCommand = function ($scope, action) {
         var source = this;
-        return new rxprop.ReactiveCommand($scope, source);
+        return new rxprop.ReactiveCommand($scope, action, source);
     };

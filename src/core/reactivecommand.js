@@ -6,7 +6,7 @@
             return this.subject.subscribe(observer);
         }
 
-        function ReactiveCommand(scope, source) {
+        function ReactiveCommand(scope, action, source) {
             _super.call(this, subscribe);
 
             this.subject = new Rx.Subject();
@@ -29,6 +29,10 @@
                             });
                         }
                     })
+            }
+
+            if (action !== undefined) {
+                this.actionDisposable = this.subscribe(action);
             }
         }
 
@@ -57,6 +61,9 @@
                 this.isDisposed = true;
                 if(this.canExecuteSubscription){
                     this.canExecuteSubscription.dispose();
+                }
+                if(this.actionDisposable){
+                    this.actionDisposable.dispose();
                 }
 
                 this.subject.onCompleted();
