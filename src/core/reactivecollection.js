@@ -50,9 +50,18 @@
         Rx.Internals.addProperties(ReactiveCollection.prototype, {
             add: function (val) {
                 if (this.reverse) {
-                    this.values.unshift(val)
+                    if (val instanceof Array) {
+                        this.values.unshift.apply(this.values, val.reverse());
+                    } else {
+                        this.values.unshift(val);
+                    }
                 } else {
-                    this.values.push(val);
+                    if (val instanceof Array) {
+                        this.values.push.apply(this.values, val);
+                    } else {
+                        this.values.push(val);
+                    }
+
                 }
                 if (this.bufferSize && this.values.length > this.bufferSize) {
                     if (this.reverse) {
