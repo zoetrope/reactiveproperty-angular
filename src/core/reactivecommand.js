@@ -5,11 +5,17 @@
             return this.subject.subscribe(observer);
         }
 
-        function ReactiveCommand(scope, action, source) {
+        function ReactiveCommand(scope, options, source) {
             _super.call(this, subscribe);
 
             this.subject = new Rx.Subject();
-            this.isCanExecute = true;
+
+            options = options || {};
+            this.isCanExecute = options.initCanExecute || true;
+            if (options.action !== undefined) {
+                this.actionDisposable = this.subscribe(options.action);
+            }
+
             this.scope = scope;
             this.isDisposed = false;
             var self = this;
@@ -30,9 +36,6 @@
                     })
             }
 
-            if (action !== undefined) {
-                this.actionDisposable = this.subscribe(action);
-            }
         }
 
         Rx.Internals.addProperties(ReactiveCommand.prototype, {

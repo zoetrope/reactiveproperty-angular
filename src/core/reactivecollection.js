@@ -5,18 +5,15 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveCollection(scope, initValues, bufferSize, reverse, source) {
+        function ReactiveCollection(scope, options, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
 
-            if (initValues !== undefined) {
-                this.values = initValues;
-            } else {
-                this.values = [];
-            }
-            this.bufferSize = bufferSize;
-            this.reverse = reverse;
+            options = options || {};
+            this.values = options.initValues || [];
+            this.bufferSize = options.bufferSize;
+            this.reverse = options.reverse;
             this.isDisposed = false;
             this.observable = new Rx.Subject();
             var self = this;

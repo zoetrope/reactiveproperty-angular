@@ -4,7 +4,7 @@ var app = angular.module('app', ['rxprop']);
 
 app.controller("ValidationCtrl", ["$scope",
     function ($scope) {
-        $scope.inputText = new rxprop.ReactiveProperty($scope, "");
+        $scope.inputText = new rxprop.ReactiveProperty($scope, {initValue: ""});
 
         $scope.displayText = $scope.inputText
             .select(function (x) {

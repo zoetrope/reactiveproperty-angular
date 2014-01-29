@@ -20,7 +20,7 @@ module controller {
 
         constructor(private $scope: TSScope)
         {
-            $scope.inputText = new rxprop.ReactiveProperty<string>($scope, "");
+            $scope.inputText = new rxprop.ReactiveProperty<string>($scope, {initValue: ""});
 
             $scope.displayText = $scope.inputText
                 .select(function (x) {

@@ -21,7 +21,7 @@ app.controller("OwnCtrl", ["$scope",
             return typeof str === "string" && str !== "";
         }
 
-        $scope.inputText = new rxprop.ReactiveProperty($scope, "");
+        $scope.inputText = new rxprop.ReactiveProperty($scope, {initValue: ""});
 
         $scope.emitCommand = $scope.inputText
             .select(isValidString)

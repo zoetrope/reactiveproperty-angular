@@ -11,7 +11,7 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveProperty(scope, initValue, mode, source) {
+        function ReactiveProperty(scope, options, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
@@ -20,12 +20,11 @@
 
             var self = this;
 
-            if (initValue !== undefined) {
-                this.val = initValue;
-            }
-            if (mode === undefined) {
-                mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
-            }
+            options = options || {};
+            this.val = options.initValue;
+            var mode = options.mode ||
+                rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
+
             if (source === undefined) {
                 source = Rx.Observable.never();
             }
@@ -35,7 +34,7 @@
                 merge = merge.distinctUntilChanged();
             }
             if ((mode & rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) == rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) {
-                var connectable = merge.publishValue(initValue);
+                var connectable = merge.publishValue(options.initValue);
             } else {
                 var connectable = merge.publish();
             }

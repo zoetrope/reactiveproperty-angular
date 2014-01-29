@@ -1,14 +1,14 @@
-    Rx.Observable.prototype.toReactiveProperty = function ($scope, initValue, mode) {
+    Rx.Observable.prototype.toReactiveProperty = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveProperty($scope, initValue, mode, source);
+        return new rxprop.ReactiveProperty($scope, options, source);
     };
 
-    Rx.Observable.prototype.toReactiveCollection = function ($scope, initValues, bufferSize, reverse) {
+    Rx.Observable.prototype.toReactiveCollection = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveCollection($scope, initValues, bufferSize, reverse, source);
+        return new rxprop.ReactiveCollection($scope, options, source);
     };
 
-    Rx.Observable.prototype.toReactiveCommand = function ($scope, action) {
+    Rx.Observable.prototype.toReactiveCommand = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveCommand($scope, action, source);
+        return new rxprop.ReactiveCommand($scope, options, source);
     };

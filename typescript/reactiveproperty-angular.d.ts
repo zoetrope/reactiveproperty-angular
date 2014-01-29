@@ -12,7 +12,7 @@ declare module rxprop {
         value: T;
     }
     interface ReactivePropertyStatic {
-        new<T> ($scope:ng.IScope, initValue?:T, mode?:ReactivePropertyMode): ReactiveProperty<T>;
+        new<T> ($scope:ng.IScope, options?: {initValue?:T; mode?:ReactivePropertyMode}): ReactiveProperty<T>;
     }
     export var ReactiveProperty:ReactivePropertyStatic;
 
@@ -20,7 +20,7 @@ declare module rxprop {
         values: Array<T>;
     }
     interface ReactiveCollectionStatic {
-        new<T> ($scope:ng.IScope, initValues?:T[], bufferSize?:number, reverse?:boolean): ReactiveCollection<T>;
+        new<T> ($scope:ng.IScope, options?: {initValues?:T[]; bufferSize?:number; reverse?:boolean}): ReactiveCollection<T>;
     }
     export var ReactiveCollection:ReactiveCollectionStatic;
 
@@ -29,7 +29,7 @@ declare module rxprop {
         canExecute(param) : boolean;
     }
     interface ReactiveCommandStatic {
-        new<T> (scope:ng.IScope, action?:(T)=>void): ReactiveCommand<T>;
+        new<T> (scope:ng.IScope, options?: {initCanExecute?: boolean; action?:(T)=>void}): ReactiveCommand<T>;
     }
     export var ReactiveCommand:ReactiveCommandStatic;
 
@@ -51,9 +51,9 @@ declare module rxprop {
 
 declare module Rx {
     export interface Observable<T> {
-        toReactiveProperty : ($scope:ng.IScope, initValue?:T, mode?:rxprop.ReactivePropertyMode) => rxprop.ReactiveProperty<T>;
-        toReactiveCollection : ($scope:ng.IScope, initValues?:T[], bufferSize?:number, reverse?:boolean) => rxprop.ReactiveCollection<T>;
-        toReactiveCommand : ($scope:ng.IScope, action?:(T)=>void) => rxprop.ReactiveCommand<T>;
+        toReactiveProperty : ($scope:ng.IScope, options?: {initValue?:T; mode?:rxprop.ReactivePropertyMode}) => rxprop.ReactiveProperty<T>;
+        toReactiveCollection : ($scope:ng.IScope, options?: {initValues?:T[]; bufferSize?:number; reverse?:boolean}) => rxprop.ReactiveCollection<T>;
+        toReactiveCommand : ($scope:ng.IScope, options?: {initCanExecute?:boolean; action?:(T)=>void}) => rxprop.ReactiveCommand<T>;
 
         onErrorRetry<TException>(onError:(ex:TException)=> void, retryCount?:number, delay?:number): Observable<T>;
     }

@@ -32,7 +32,7 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveProperty(scope, initValue, mode, source) {
+        function ReactiveProperty(scope, options, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
@@ -41,12 +41,11 @@
 
             var self = this;
 
-            if (initValue !== undefined) {
-                this.val = initValue;
-            }
-            if (mode === undefined) {
-                mode = rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
-            }
+            options = options || {};
+            this.val = options.initValue;
+            var mode = options.mode ||
+                rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe | rxprop.ReactivePropertyMode.DistinctUntilChanged;
+
             if (source === undefined) {
                 source = Rx.Observable.never();
             }
@@ -56,7 +55,7 @@
                 merge = merge.distinctUntilChanged();
             }
             if ((mode & rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) == rxprop.ReactivePropertyMode.RaiseLatestValueOnSubscribe) {
-                var connectable = merge.publishValue(initValue);
+                var connectable = merge.publishValue(options.initValue);
             } else {
                 var connectable = merge.publish();
             }
@@ -123,18 +122,15 @@
             return this.observable.subscribe(observer);
         }
 
-        function ReactiveCollection(scope, initValues, bufferSize, reverse, source) {
+        function ReactiveCollection(scope, options, source) {
             _super.call(this, subscribe);
 
             this.scope = scope;
 
-            if (initValues !== undefined) {
-                this.values = initValues;
-            } else {
-                this.values = [];
-            }
-            this.bufferSize = bufferSize;
-            this.reverse = reverse;
+            options = options || {};
+            this.values = options.initValues || [];
+            this.bufferSize = options.bufferSize;
+            this.reverse = options.reverse;
             this.isDisposed = false;
             this.observable = new Rx.Subject();
             var self = this;
@@ -223,11 +219,17 @@
             return this.subject.subscribe(observer);
         }
 
-        function ReactiveCommand(scope, action, source) {
+        function ReactiveCommand(scope, options, source) {
             _super.call(this, subscribe);
 
             this.subject = new Rx.Subject();
-            this.isCanExecute = true;
+
+            options = options || {};
+            this.isCanExecute = options.initCanExecute || true;
+            if (options.action !== undefined) {
+                this.actionDisposable = this.subscribe(options.action);
+            }
+
             this.scope = scope;
             this.isDisposed = false;
             var self = this;
@@ -248,9 +250,6 @@
                     })
             }
 
-            if (action !== undefined) {
-                this.actionDisposable = this.subscribe(action);
-            }
         }
 
         Rx.Internals.addProperties(ReactiveCommand.prototype, {
@@ -431,19 +430,19 @@
         return result;
     };
 
-    Rx.Observable.prototype.toReactiveProperty = function ($scope, initValue, mode) {
+    Rx.Observable.prototype.toReactiveProperty = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveProperty($scope, initValue, mode, source);
+        return new rxprop.ReactiveProperty($scope, options, source);
     };
 
-    Rx.Observable.prototype.toReactiveCollection = function ($scope, initValues, bufferSize, reverse) {
+    Rx.Observable.prototype.toReactiveCollection = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveCollection($scope, initValues, bufferSize, reverse, source);
+        return new rxprop.ReactiveCollection($scope, options, source);
     };
 
-    Rx.Observable.prototype.toReactiveCommand = function ($scope, action) {
+    Rx.Observable.prototype.toReactiveCommand = function ($scope, options) {
         var source = this;
-        return new rxprop.ReactiveCommand($scope, action, source);
+        return new rxprop.ReactiveCommand($scope, options, source);
     };
 
     angular.module('rxprop')
