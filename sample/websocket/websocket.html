@@ -1,0 +1,23 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <script type="text/javascript" src="../lib/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/rxjs/rx.lite.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="../../reactiveproperty-angular.js" charset="utf-8"></script>
+    <script type="text/javascript" src="websocket.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div ng-controller="WebSocketCtrl">
+         <div ng-repeat="item in items.values">
+            {{item}} <br/>
+        </div>
+    </div>
+</body>
+
+</html>
