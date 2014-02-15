@@ -1,5 +1,5 @@
 /**
- * @license ReactiveProperty for AngularJS v0.2.0
+ * @license ReactiveProperty for AngularJS v0.2.1
  * Copyright (c) 2014 zoetrope https://github.com/zoetrope/reactiveproperty-angular/
  * License: MIT
  */
