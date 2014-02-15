@@ -34,7 +34,7 @@ A port of ReactiveProperty for AngularJS
 var app = angular.module('app', ['rxprop']);
 app.controller("BasicsCtrl", ["$scope",
     function ($scope) {
-        $scope.inputText = new rxprop.ReactiveProperty($scope, "");
+        $scope.inputText = new rxprop.ReactiveProperty($scope, {initValue: ""});
         $scope.displayText = $scope.inputText
             .select(function (x) {
                 return x.toUpperCase();
@@ -98,11 +98,11 @@ var app = angular.module('app', ['rxprop']);
 
 app.controller("CommandCtrl", ["$scope",
     function ($scope) {
-        $scope.isChecked1 = new rxprop.ReactiveProperty($scope, false);
-        $scope.isChecked2 = new rxprop.ReactiveProperty($scope, false);
-        $scope.isChecked3 = new rxprop.ReactiveProperty($scope, false);
-        $scope.isChecked4 = new rxprop.ReactiveProperty($scope, false);
-        $scope.currentText = new rxprop.ReactiveProperty($scope, "");
+        $scope.isChecked1 = new rxprop.ReactiveProperty($scope, {initValue: false});
+        $scope.isChecked2 = new rxprop.ReactiveProperty($scope, {initValue: false});
+        $scope.isChecked3 = new rxprop.ReactiveProperty($scope, {initValue: false});
+        $scope.isChecked4 = new rxprop.ReactiveProperty($scope, {initValue: false});
+        $scope.currentText = new rxprop.ReactiveProperty($scope, {initValue: ""});
 
         $scope.checkedCommand = $scope.isChecked1
             .combineLatest($scope.isChecked2, $scope.isChecked3, $scope.isChecked4, $scope.currentText, function (a, b, c, d, txt) {
@@ -135,7 +135,7 @@ var app = angular.module('app', ['rxprop']);
 
 app.controller("EventCtrl", ["$scope",
     function ($scope) {
-        $scope.mousemove = new rxprop.ReactiveProperty($scope, undefined, rxprop.ReactivePropertyMode.DistinctUntilChanged);
+        $scope.mousemove = new rxprop.ReactiveProperty($scope, {mode: rxprop.ReactivePropertyMode.DistinctUntilChanged});
 
         $scope.currentPoint = $scope.mousemove
             .select(function (e) {
@@ -167,3 +167,87 @@ app.controller("EventCtrl", ["$scope",
 * rp-cut
 * rp-paste
 
+
+### Observable Message
+
+
+~~~html
+<div ng-controller="ParentCtrl">
+
+    <div ng-controller="OwnCtrl">
+        <input type="text" ng-model="inputText.value">
+        <button id="emitButton" rp-command="emitCommand" rp-parameter="inputText.value">emit</button>
+        <button id="broadcastButton" rp-command="broadcastCommand" rp-parameter="inputText.value">broadcast</button>
+        <div ng-controller="ChildCtrl">
+            <div>
+            Child = {{childReceived.value}}
+            </div>
+        </div>
+        <div>
+        Own = {{ownReceived.value}}
+        </div>
+    </div>
+    <div>
+    Parent = {{parentReceived.value}}
+    </div>
+</div>
+~~~
+
+~~~js
+var app = angular.module('app', ['rxprop']);
+
+app.controller("ParentCtrl", ["$scope",
+    function ($scope) {
+        $scope.parentReceived = $scope
+            .$onAsObservable("eventTest")
+            .select(function (e) {
+                return e.value;
+            })
+            .toReactiveProperty($scope);
+
+    }]);
+
+app.controller("OwnCtrl", ["$scope",
+    function ($scope) {
+
+        function isValidString(str){
+            return typeof str === "string" && str !== "";
+        }
+
+        $scope.inputText = new rxprop.ReactiveProperty($scope, {initValue: ""});
+
+        $scope.emitCommand = $scope.inputText
+            .select(isValidString)
+            .toReactiveCommand($scope);
+
+        $scope.emitCommand.subscribe(function (v) {
+            $scope.$emitAsObserver("eventTest").onNext(v)
+        });
+
+        $scope.broadcastCommand = $scope.inputText
+            .select(isValidString)
+            .toReactiveCommand($scope);
+
+        $scope.broadcastCommand.subscribe(function (v) {
+            $scope.$broadcastAsObserver("eventTest").onNext(v);
+        });
+
+
+        $scope.ownReceived = $scope
+            .$onAsObservable("eventTest")
+            .select(function (e) {
+                return e.value;
+            })
+            .toReactiveProperty($scope);
+    }]);
+
+app.controller("ChildCtrl", ["$scope",
+    function ($scope) {
+        $scope.childReceived = $scope
+            .$onAsObservable("eventTest")
+            .select(function (e) {
+                return e.value;
+            })
+            .toReactiveProperty($scope);
+    }]);
+~~~
