@@ -14,6 +14,7 @@
             this.values = options.initValues || [];
             this.bufferSize = options.bufferSize;
             this.reverse = options.reverse;
+            this.flatten = options.flatten;
             this.isDisposed = false;
             this.observable = new Rx.Subject();
             var self = this;
@@ -47,13 +48,13 @@
         Rx.Internals.addProperties(ReactiveCollection.prototype, {
             add: function (val) {
                 if (this.reverse) {
-                    if (val instanceof Array) {
+                    if (val instanceof Array && this.flatten) {
                         this.values.unshift.apply(this.values, val.reverse());
                     } else {
                         this.values.unshift(val);
                     }
                 } else {
-                    if (val instanceof Array) {
+                    if (val instanceof Array && this.flatten) {
                         this.values.push.apply(this.values, val);
                     } else {
                         this.values.push(val);

@@ -11,7 +11,11 @@
             this.subject = new Rx.Subject();
 
             options = options || {};
-            this.isCanExecute = options.initCanExecute || true;
+            if (options.initCanExecute === undefined) {
+                this.isCanExecute = true;
+            } else {
+                this.isCanExecute = options.initCanExecute;
+            }
             if (options.action !== undefined) {
                 this.actionDisposable = this.subscribe(options.action);
             }

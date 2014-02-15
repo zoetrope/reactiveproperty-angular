@@ -131,6 +131,7 @@
             this.values = options.initValues || [];
             this.bufferSize = options.bufferSize;
             this.reverse = options.reverse;
+            this.flatten = options.flatten;
             this.isDisposed = false;
             this.observable = new Rx.Subject();
             var self = this;
@@ -164,13 +165,13 @@
         Rx.Internals.addProperties(ReactiveCollection.prototype, {
             add: function (val) {
                 if (this.reverse) {
-                    if (val instanceof Array) {
+                    if (val instanceof Array && this.flatten) {
                         this.values.unshift.apply(this.values, val.reverse());
                     } else {
                         this.values.unshift(val);
                     }
                 } else {
-                    if (val instanceof Array) {
+                    if (val instanceof Array && this.flatten) {
                         this.values.push.apply(this.values, val);
                     } else {
                         this.values.push(val);
@@ -225,7 +226,11 @@
             this.subject = new Rx.Subject();
 
             options = options || {};
-            this.isCanExecute = options.initCanExecute || true;
+            if (options.initCanExecute === undefined) {
+                this.isCanExecute = true;
+            } else {
+                this.isCanExecute = options.initCanExecute;
+            }
             if (options.action !== undefined) {
                 this.actionDisposable = this.subscribe(options.action);
             }
@@ -511,7 +516,4 @@
 
 
     root.rxprop = rxprop;
-
-    //TODO: node.js用とかAMD用のコードを書く
-
 })(this);
