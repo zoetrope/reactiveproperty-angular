@@ -6,7 +6,7 @@
     };
 
     var CountNotifier = rxprop.CountNotifier = (function (_super) {
-        Rx.Internals.inherits(CountNotifier, _super);
+        Rx.internals.inherits(CountNotifier, _super);
 
         function subscribe(observer) {
             return this.statusChanged.subscribe(observer);
@@ -24,7 +24,7 @@
 
         }
 
-        Rx.Internals.addProperties(CountNotifier.prototype, {
+        Rx.internals.addProperties(CountNotifier.prototype, {
 
             increment: function () {
 

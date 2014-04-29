@@ -5,7 +5,7 @@
     };
 
     var ReactiveProperty = rxprop.ReactiveProperty = (function (_super) {
-        Rx.Internals.inherits(ReactiveProperty, _super);
+        Rx.internals.inherits(ReactiveProperty, _super);
 
         function subscribe(observer) {
             return this.observable.subscribe(observer);
@@ -69,7 +69,7 @@
             configurable: true
         });
 
-        Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
+        Rx.internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
             onCompleted: function () {
                 this.anotherTrigger.onCompleted()
             },

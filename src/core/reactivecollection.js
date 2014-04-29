@@ -1,5 +1,5 @@
     var ReactiveCollection = rxprop.ReactiveCollection = (function (_super) {
-        Rx.Internals.inherits(ReactiveCollection, _super);
+        Rx.internals.inherits(ReactiveCollection, _super);
 
         function subscribe(observer) {
             return this.observable.subscribe(observer);
@@ -45,7 +45,7 @@
                 }, true);
         }
 
-        Rx.Internals.addProperties(ReactiveCollection.prototype, {
+        Rx.internals.addProperties(ReactiveCollection.prototype, {
             add: function (val) {
                 if (this.reverse) {
                     if (val instanceof Array && this.flatten) {

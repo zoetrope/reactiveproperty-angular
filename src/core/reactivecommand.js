@@ -1,5 +1,5 @@
     var ReactiveCommand = rxprop.ReactiveCommand = (function (_super) {
-        Rx.Internals.inherits(ReactiveCommand, _super);
+        Rx.internals.inherits(ReactiveCommand, _super);
 
         function subscribe(observer) {
             return this.subject.subscribe(observer);
@@ -42,7 +42,7 @@
 
         }
 
-        Rx.Internals.addProperties(ReactiveCommand.prototype, {
+        Rx.internals.addProperties(ReactiveCommand.prototype, {
 
             execute: function (param) {
                 var self = this;

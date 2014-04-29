@@ -1,5 +1,5 @@
 /**
- * @license ReactiveProperty for AngularJS v0.2.1
+ * @license ReactiveProperty for AngularJS v0.2.2
  * Copyright (c) 2014 zoetrope https://github.com/zoetrope/reactiveproperty-angular/
  * License: MIT
  */
@@ -26,7 +26,7 @@
     };
 
     var ReactiveProperty = rxprop.ReactiveProperty = (function (_super) {
-        Rx.Internals.inherits(ReactiveProperty, _super);
+        Rx.internals.inherits(ReactiveProperty, _super);
 
         function subscribe(observer) {
             return this.observable.subscribe(observer);
@@ -90,7 +90,7 @@
             configurable: true
         });
 
-        Rx.Internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
+        Rx.internals.addProperties(ReactiveProperty.prototype, Rx.Observer, {
             onCompleted: function () {
                 this.anotherTrigger.onCompleted()
             },
@@ -116,7 +116,7 @@
     }(Rx.Observable));
 
     var ReactiveCollection = rxprop.ReactiveCollection = (function (_super) {
-        Rx.Internals.inherits(ReactiveCollection, _super);
+        Rx.internals.inherits(ReactiveCollection, _super);
 
         function subscribe(observer) {
             return this.observable.subscribe(observer);
@@ -162,7 +162,7 @@
                 }, true);
         }
 
-        Rx.Internals.addProperties(ReactiveCollection.prototype, {
+        Rx.internals.addProperties(ReactiveCollection.prototype, {
             add: function (val) {
                 if (this.reverse) {
                     if (val instanceof Array && this.flatten) {
@@ -214,7 +214,7 @@
     }(Rx.Observable));
 
     var ReactiveCommand = rxprop.ReactiveCommand = (function (_super) {
-        Rx.Internals.inherits(ReactiveCommand, _super);
+        Rx.internals.inherits(ReactiveCommand, _super);
 
         function subscribe(observer) {
             return this.subject.subscribe(observer);
@@ -257,7 +257,7 @@
 
         }
 
-        Rx.Internals.addProperties(ReactiveCommand.prototype, {
+        Rx.internals.addProperties(ReactiveCommand.prototype, {
 
             execute: function (param) {
                 var self = this;
@@ -305,7 +305,7 @@
     };
 
     var CountNotifier = rxprop.CountNotifier = (function (_super) {
-        Rx.Internals.inherits(CountNotifier, _super);
+        Rx.internals.inherits(CountNotifier, _super);
 
         function subscribe(observer) {
             return this.statusChanged.subscribe(observer);
@@ -323,7 +323,7 @@
 
         }
 
-        Rx.Internals.addProperties(CountNotifier.prototype, {
+        Rx.internals.addProperties(CountNotifier.prototype, {
 
             increment: function () {
 
