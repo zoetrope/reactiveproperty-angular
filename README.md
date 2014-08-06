@@ -10,7 +10,7 @@ A port of ReactiveProperty for AngularJS
 
 ## Install
 
-> bower install reactivepropety-angular
+> bower install reactiveproperty-angular
 
 ~~~html
 <script type="text/javascript" src="angular/angular.js" charset="utf-8"></script>
